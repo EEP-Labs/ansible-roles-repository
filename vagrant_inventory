@@ -1,0 +1,2 @@
+default ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 site_name=test site_domain=example.com site_web_root=/var/www/example/
+
