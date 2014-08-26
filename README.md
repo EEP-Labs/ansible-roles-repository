@@ -8,6 +8,12 @@ It's possible to use a [vagrant](http://vagrantup.com) machine in order to test 
         --private-key=~/.vagrant.d/insecure_private_key \
         --user=root \
         playbook.yml
+    $ ansible-playbook \
+        --inventory-file=local_inventory \
+        --tag certs \
+        --extra-vars @certs.yml \
+        --extra-vars site=eeplab.es \
+        playbook.yml 
 
 
 There are several roles availables:

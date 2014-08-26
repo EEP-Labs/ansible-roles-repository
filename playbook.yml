@@ -2,3 +2,4 @@
 - hosts: all
   roles:
     - { role: nginx, tags: nginx }
+    - { role: certs, tags: certs }

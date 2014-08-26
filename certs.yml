@@ -1,0 +1,3 @@
+---
+certs_parameters:
+    - { name: 'foobar.com', country: 'DE', state: 'Bavaria', city: 'Munich', organization: 'Foo Bar', unit: '', email: 'foo@bar.com', days: 3650 }
