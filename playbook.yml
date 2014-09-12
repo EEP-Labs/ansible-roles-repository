@@ -3,3 +3,4 @@
   roles:
     - { role: nginx, tags: nginx }
     - { role: certs, tags: certs }
+    - { role: databases, tags: databases }

@@ -19,5 +19,5 @@ It's possible to use a [vagrant](http://vagrantup.com) machine in order to test 
 There are several roles availables:
 
  - nginx
- - postgresql (coming soon)
+ - postgresql
  - Certificates (coming soon)
