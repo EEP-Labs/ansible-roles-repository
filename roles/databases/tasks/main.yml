@@ -2,6 +2,7 @@
 - name: check mandatory parameters
   fail: msg="db_user, db_name and db_password parameters are not defined"
   when: db_user is not defined or db_name is not defined or db_password is not defined
+
 - name: install necessary packages
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
   with_items:
@@ -9,32 +10,20 @@
     - python-psycopg2
     - postgresql-9.1
 
-# we must explicitely call for restart since copy and replace don't trigger handlers
-#- replace: dest=/etc/postgresql/9.1/main/postgresql.conf regexp="^#(listen_addresses\s+=\s+)'.+'" replace="\1'*'"
-- copy: src=pg_hba.conf dest=/etc/postgresql/9.1/main/pg_hba.conf owner=postgres group=postgres mode=0644
-- service: name=postgresql state=restarted
-
 - name: create database
+  su: yes
+  su_user: postgres
   postgresql_db:
-    name="{{ db_name }}"
-    login_user=postgres
-    login_host=127.0.0.1
+      name="{{ db_name }}"
 
-- name: create database user
+# https://groups.google.com/forum/#!topic/ansible-project/IknBo5QvJXQ
+- name: create database user {% if development is defined %}(development mode){% endif %}
+  su: yes
+  su_user: postgres
   postgresql_user:
-    db="{{ db_name }}"
-    user="{{ db_user }}"
-    password="{{ db_password }}"
-    login_user=postgres
-    login_host=127.0.0.1
-# this task is executed only when the parameter "development" is passed
-- name: give power for testing purpose
-  postgresql_privs:
-    db="{{ db_name }}"
-    roles="{{ db_user }}"
-    type=schema
-    objs=public
-    privs=CREATE
-    login_user=postgres
-    login_host=127.0.0.1
-  when: development is defined
+      db="{{ db_name }}"
+      user="{{ db_user }}"
+      password="{{ db_password }}"
+      role_attr_flags={% if development is not defined %}NO{% endif %}CREATEDB,NOSUPERUSER
+
+- service: name=postgresql state=restarted

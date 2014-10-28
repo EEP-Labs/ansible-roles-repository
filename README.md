@@ -22,3 +22,5 @@ There are several roles availables:
  - nginx
  - postgresql
  - Certificates (coming soon)
+
+If the variable ``development`` is defined some dev options are enabled.
