@@ -1,0 +1,22 @@
+---
+# Create user and its home directory
+
+- name: Creates webroot
+  file: path={{ site_web_root }} state=directory
+
+- name: create user
+  user: name={{ webapp_username }} home={{ site_web_root }} shell=/bin/bash comment="Account webapp {{ site_domain }}"
+
+- name: Creates webroot app
+  file: path={{ site_web_root }}/{{ item }} state=directory owner={{ webapp_username }}
+  with_items:
+    - app
+    - static
+    - media
+    - repo
+
+- name: create .ssh/
+  file: path={{ site_web_root }}/.ssh/ state=directory owner={{ webapp_username }} mode=700
+
+- name: create authorized_keys
+  file: path={{ site_web_root }}/.ssh/authorized_keys state=touch owner={{ webapp_username }} mode=600
