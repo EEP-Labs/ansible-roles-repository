@@ -5,7 +5,7 @@
   when: site_name is not defined or site_domain is not defined or site_web_root is not defined
 
 - name: install package
-  apt: name={{ item }}
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600
   with_items:
     - nginx
 

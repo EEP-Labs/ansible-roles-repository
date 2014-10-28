@@ -3,7 +3,7 @@
   fail: msg="db_user, db_name and db_password parameters are not defined"
   when: db_user is not defined or db_name is not defined or db_password is not defined
 - name: install necessary packages
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
   with_items:
     - libpq-dev
     - python-psycopg2
