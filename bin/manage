@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -eo pipefail
+
+# define two or more ssh config entries
+# that describe connection configurations
+SSH_CONFIG=.ssh_provisioning_config
+
+usage() {
+    cat <<-EOF
+    usage: $(basename $0) add-key-to-user <pub key path> <user> <endpoint>
+EOF
+    exit 1
+}
+
+test "$#" == 0 && usage
+
+die () {
+    local MSG="$1"
+    echo ' [!] fatal: '${MSG}
+    exit 1
+}
+
+add_user() {
+    local KEY_PATH="$1"
+    local USER="$2"
+    local ENDPOINT="${3?missing endpoint}"
+
+    test -f ${KEY_PATH} || die "file '${KEY_PATH}' does not exist"
+
+    echo " [I] adding key '${KEY_PATH}' for user ${USER}"
+
+    cat ${KEY_PATH} | ssh -F ${SSH_CONFIG} ${ENDPOINT} "cat | tee -a ~${USER}/.ssh/authorized_keys"
+}
+
+case "$1" in
+    add-key-to-user)
+        shift
+        add_user $@
+        ;;
+esac
