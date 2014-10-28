@@ -24,3 +24,10 @@ There are several roles availables:
  - Certificates (coming soon)
 
 If the variable ``development`` is defined some dev options are enabled.
+
+Getting started
+---------------
+
+If you have a project that needs to be provisioned you can use this as a submodule
+
+    $ git submodule add https://github.com/EEP-Labs/ansible-roles-repository provision/
