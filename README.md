@@ -33,3 +33,5 @@ Getting started
 If you have a project that needs to be provisioned you can use this as a submodule
 
     $ git submodule add https://github.com/EEP-Labs/ansible-roles-repository provision/
+
+Some workflow ideas are in the [DOCS](DOCS.md) document.

@@ -1,0 +1,3 @@
+#!/bin/bash -x
+
+exec ssh -v -F .ssh_provisioning_config $@
