@@ -5,3 +5,4 @@
     - { role: certs, tags: certs }
     - { role: databases, tags: databases }
     - { role: webapp, tags: webapp }
+    - { role: repo,   tags: repo}
