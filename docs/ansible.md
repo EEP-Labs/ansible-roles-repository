@@ -20,6 +20,12 @@ Usage
 ``Ansible`` is based on **playbook**: **Playbook** contains **Plays** contains **Tasks** calls **Modules**,
 **Handlers** can be triggered by tasks.
 
+First of all the tool used to connect is ``SSH``, the host to which connect to is indicated into the ``inventory`` file.
+
+The default is ``/etc/ansible/hosts`` but you can pass another with the ``--inventory-file`` parameter; the inventory
+can store alias, variable, etc. There are also a lot of
+[variables](http://docs.ansible.com/intro_inventory.html#list-of-behavioral-inventory-parameters) used by ansible itself.
+
 Vagrant
 -------
 
