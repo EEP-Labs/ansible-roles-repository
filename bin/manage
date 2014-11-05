@@ -9,6 +9,7 @@ SSH_CONFIG=.ssh_provisioning_config
 usage() {
     cat <<-EOF
     usage: $(basename $0) add-key-to-user <pub key path> <user> <endpoint>
+           $(basename $0) provision <environment>
 EOF
     exit 1
 }
@@ -19,6 +20,10 @@ die () {
     local MSG="$1"
     echo ' [!] fatal: '${MSG}
     exit 1
+}
+
+check_file_exists() {
+    test -f "$1" || die "file '$1' does not exist"
 }
 
 add_user() {
@@ -33,9 +38,24 @@ add_user() {
     cat ${KEY_PATH} | ssh -F ${SSH_CONFIG} ${ENDPOINT} "cat | tee -a ~${USER}/.ssh/authorized_keys"
 }
 
+provision() {
+    local CONFIGURATION="${1?missing environment parameter}"
+    local INVENTORY=ansible_${CONFIGURATION}_inventory
+    local VARIABLES=ansible_${CONFIGURATION}_variables
+
+    check_file_exists ${INVENTORY}
+    check_file_exists ${VARIABLES}
+
+    ansible-playbook --inventory-file ${INVENTORY} \
+        --extra-vars @${VARIABLES} \
+        playbook.yml
+}
 case "$1" in
     add-key-to-user)
         shift
         add_user $@
         ;;
+     provision)
+        shift
+        provision $@
 esac

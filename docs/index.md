@@ -30,7 +30,15 @@ For each of this file you have to indicate at least the following ansible variab
  * ``ansible_ssh_private_key``
  * ``ansible_ssh_user`` equal to ``root``
 
+Usage
+-----
 
+In the ``bin/`` directory exists the ``manage`` script that help to configure the machines
+ 
+    $ bin/manage provision <configuration>
+
+TODO
+----
     $ storm add vagrant root@127.0.0.1:2222 \
         --id_file ~/.vagrant.d/insecure_private_key --o 'identitiesonly=True' --config .ssh_provisioning_config
 

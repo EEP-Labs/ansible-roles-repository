@@ -82,3 +82,7 @@ configurated network interfaces:
 
 The box is provisioned with a simple script that copy the vagrant key into the ``authorized_keys``
 of the ``root`` user so to make more easy using ansible after.
+
+To provisioning this machine you have already some preconfigured files ready to use, you have only to do
+
+    $ bin/manage provision vagrant
