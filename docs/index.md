@@ -18,7 +18,7 @@ In our deployment configuration with ansible, the inventory file is named like
 
     ansible_<configuration>_inventory
 
-and the variable files is named
+and the variables file is named
 
     ansible_<configuraton>_variables
 
