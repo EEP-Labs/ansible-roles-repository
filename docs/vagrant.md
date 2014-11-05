@@ -49,7 +49,8 @@ Usually a command acts in its own installation, the configuration for an install
 named ``Vagrantfile`` containing at least the box type and probably some network settings. It's possible to initialize
  one using the ``init`` subcommand.
 
-After that ``vagrant up`` should launch the virtual machine.
+After that ``vagrant up`` should launch the virtual machine and if a provisioning is indicated then it's run
+to configure the machine.
 
 Getting Started
 ---------------
