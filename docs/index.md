@@ -1,7 +1,7 @@
 It's important to maintain a set of reusable tools and conventions to deploy web application and stuff, like
 directory structure, database permissions, user home directory and web server configuration.
 
-Exist a lot of tools to do that, we have choses [Ansible](http://ansible.com) since it's written in Python
+Exist a lot of tools to do that, we have chosen [Ansible](http://ansible.com) since it's written in Python
 and does not require to install nothing server side but Python itself. There are some drawbacks in this tool
 but up to now has done its job. If you want a little introduction there is a page [here](ansible.md)
 
