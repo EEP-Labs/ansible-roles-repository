@@ -5,6 +5,23 @@ Exist a lot of tools to do that, we have choses [Ansible](http://ansible.com) si
 and does not require to install nothing server side but Python itself. There are some drawbacks in this tool
 but up to now has done its job. If you want a little introduction there is a page [here](ansible.md)
 
+Convention
+----------
+
+There are at least three configurations in a normal development:
+
+ * local, using Vagrant
+ * staging, used for pre-release
+ * production, where shit happens
+
+In our deployment configuration with ansible, the inventory file is named like
+
+    ansible_<configuration>_inventory
+
+and the variable files is named
+
+    ansible_<configuraton>_variables
+
     $ vagrant up
     $ ansible-playbook         \
         --inventory-file=vagrant_inventory                \
