@@ -1,3 +1,5 @@
+![documentation build status](https://readthedocs.org/projects/ansible-roles-repository/badge/?version=latest)
+
 Repository used internally.
 
 It's possible to use a [vagrant](http://vagrantup.com) machine in order to test all the things
@@ -34,5 +36,5 @@ If you have a project that needs to be provisioned you can use this as a submodu
 
     $ git submodule add https://github.com/EEP-Labs/ansible-roles-repository provision/
 
-Some workflow ideas are in the [DOCS](DOCS.md) document. The documentation is written
-using [MkDocs](http://www.mkdocs.org/).
+The documentation is written using [MkDocs](http://www.mkdocs.org/) and is available online at
+[readthedocs](http://ansible-roles-repository.readthedocs.org/).
