@@ -34,6 +34,15 @@ It's possible also to launch ansible without playbook if you want to execute a s
 
 In the official documentation there is [more](http://docs.ansible.com/intro_adhoc.html).
 
+Generally the form of usage is
+
+    $ ansible-playbook         \
+        --inventory-file=vagrant_inventory                \
+        --private-key=~/.vagrant.d/insecure_private_key   \
+        --user=root         \
+        --skip-tag certs    \
+        playbook.yml
+
 Vagrant
 -------
 

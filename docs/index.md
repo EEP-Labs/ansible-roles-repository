@@ -10,7 +10,7 @@ Convention
 
 There are at least three configurations in a normal development:
 
- * local, using Vagrant
+ * local, using [Vagrant](vagrant.md)
  * staging, used for pre-release
  * production, where shit happens
 
@@ -22,13 +22,15 @@ and the variable files is named
 
     ansible_<configuraton>_variables
 
-    $ vagrant up
-    $ ansible-playbook         \
-        --inventory-file=vagrant_inventory                \
-        --private-key=~/.vagrant.d/insecure_private_key   \
-        --user=root         \
-        --skip-tag certs    \
-        playbook.yml
+The vagrant version of these files is included in this repository since it should be equal across every project.
+
+For each of this file you have to indicate at least the following ansible variables
+
+ * ``ansible_ssh_host``
+ * ``ansible_ssh_private_key``
+ * ``ansible_ssh_user`` equal to ``root``
+
+
     $ storm add vagrant root@127.0.0.1:2222 \
         --id_file ~/.vagrant.d/insecure_private_key --o 'identitiesonly=True' --config .ssh_provisioning_config
 

@@ -2,4 +2,5 @@ site_name: EEP Labs roles repository
 pages:
 - [index.md, Home]
 - [ansible.md, Ansible]
+- [vagrant.md, Vagrant]
 theme: readthedocs
