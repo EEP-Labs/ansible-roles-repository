@@ -43,6 +43,17 @@ Generally the form of usage is
         --skip-tag certs    \
         playbook.yml
 
+Template
+--------
+
+The configuration is described using ``YAML`` file, and internally are parsed using the [Jinja2](http://jinja.pocoo.org/)
+template system.
+
+Roles
+-----
+
+Since we want to reuse configuration across projects (that is the aim of this project) we are using the **roles**.
+
 Vagrant
 -------
 
