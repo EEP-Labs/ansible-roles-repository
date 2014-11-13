@@ -7,4 +7,8 @@ webapp_public_key: 'id_rsa_staging.pub'
 db_name: 'exampledb'
 db_user: 'exampleuser'
 db_password: '8anPzDhhKKu'
-
+extra_packages:
+  - python-virtualenv
+  - python-dev
+  - libxslt1-dev
+  - libxml2-dev
