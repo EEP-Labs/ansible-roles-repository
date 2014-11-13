@@ -30,14 +30,18 @@ For each of this file you have to indicate at least the following ansible variab
  * ``ansible_ssh_private_key``
  * ``ansible_ssh_user`` equal to ``root``
 
+A project will contain this repository and its roles as a submodule in a directory named ``provision/``
+(see [here](installation.md) for some notes about this)
+and all the file described for the configuration will be placed inside it.
+
 Usage
 -----
 
 In the ``bin/`` directory exists the ``manage`` script that help to configure the machines
  
-    $ bin/manage provision <configuration>
-    $ git remote add vagrant example:repo/
-    $ bin/deploy vagrant HEAD
+    (provisioning dir) $ bin/manage provision <configuration>
+    (main project dir) $ git remote add vagrant example:repo/
+    (main project dir) $ provision/bin/deploy vagrant HEAD
 
 TODO
 ----
