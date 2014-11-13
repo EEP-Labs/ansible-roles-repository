@@ -15,6 +15,10 @@
   su_user: postgres
   postgresql_db:
       name="{{ db_name }}"
+      encoding='UTF-8'
+      lc_collate='it_IT.UTF-8'
+      lc_ctype='it_IT.UTF-8'
+      template='template0'
 
 # https://groups.google.com/forum/#!topic/ansible-project/IknBo5QvJXQ
 - name: create database user {% if development is defined %}(development mode){% endif %}
