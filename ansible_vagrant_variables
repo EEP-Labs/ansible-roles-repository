@@ -12,3 +12,4 @@ extra_packages:
   - python-dev
   - libxslt1-dev
   - libxml2-dev
+development: True
