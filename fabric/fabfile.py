@@ -4,6 +4,20 @@ from fabric.contrib import files
 from fabric.operations import run, sudo, get, local, put, open_shell
 from fabric.state import env
 
+
+# https://gist.github.com/lost-theory/1831706
+class CommandFailed(Exception):
+    def __init__(self, message, result):
+        Exception.__init__(self, message)
+        self.result = result
+
+def erun(*args, **kwargs):
+    with settings(warn_only=True):
+        result = run(*args, **kwargs)
+    if result.failed:
+        raise CommandFailed("args: %r, kwargs: %r, error code: %r" % (args, kwargs, result.return_code), result)
+    return result
+
 # http://docs.fabfile.org/en/latest/usage/execution.html#roles
 
 def describe_revision(head='HEAD'):
