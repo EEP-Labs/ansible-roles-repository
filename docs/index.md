@@ -43,6 +43,18 @@ In the ``bin/`` directory exists the ``manage`` script that help to configure th
     (main project dir) $ git remote add vagrant example:repo/
     (main project dir) $ provision/bin/deploy vagrant HEAD
 
+Directories structure
+---------------------
+
+The structure is
+
+    app  <--- this here will be recreated each time
+    media
+    static
+    repo <--- optional
+    .conf
+    .virtualenv
+
 TODO
 ----
     $ storm add vagrant root@127.0.0.1:2222 \
