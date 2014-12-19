@@ -4,4 +4,5 @@ pages:
 - [installation.md, Installation]
 - [ansible.md, Ansible]
 - [vagrant.md, Vagrant]
+- [fabric.md, Fabric]
 theme: readthedocs
