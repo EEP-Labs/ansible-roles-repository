@@ -1,5 +1,5 @@
-from StringIO import StringIO
-from fabric.context_managers import show
+import os
+from fabric.context_managers import show, settings, cd, prefix
 from fabric.contrib import files
 from fabric.operations import run, sudo, get, local, put, open_shell
 from fabric.state import env
@@ -55,10 +55,46 @@ def create_release_archive(head='HEAD'):
         get_release_filepath()
     ))
 
+def sync_virtualenv(virtualenv_path, requirements_path):
+    if not files.exists(virtualenv_path):
+        erun('virtualenv --no-site-packages %s' % virtualenv_path)
+
+    erun('source %s/bin/activate && pip install -r %s' % (
+        virtualenv_path,
+        requirements_path,
+    ))
+
+def virtualenv(virtualenv_path, *args, **kwargs):
+    prefix('source %s/bin/activate' % virtualenv_path)
+
+def django_collectstatic(virtualenv_path):
+    erun('source %s/bin/activate && honcho --env ../.env run ./manage.py collectstatic' % virtualenv_path)
+
 def release(head='HEAD'):
+    cwd = erun('pwd').stdout
     create_release_archive(head)
-    if not files.exists(get_release_filename()):
+    release_filename = get_release_filename()
+    if not files.exists(release_filename):
         put(local_path=get_release_filepath())
 
-    # tar zxvf 959fbcb.tar.gz  -C app-1bbcf18/
+    app_dir = 'app-%s' % describe_revision(head)
+    virtualenv_path = os.path.abspath(os.path.join(cwd, '.virtualenv'))
+
+    try:
+        # create the remote dir
+        erun('mkdir -p %s' % app_dir)
+        erun('tar xf %s -C %s' % (
+            release_filename,
+            app_dir,
+        ))
+        sync_virtualenv(virtualenv_path, '%s/requirements/staging.txt' % app_dir)# parametrize
+        with cd(app_dir):
+            django_collectstatic(virtualenv_path)
+    except CommandFailed as e:
+        print 'An error occoured: %s' % e
+        print '''
+####################################
+#        fallback to shell         #
+####################################
+'''
     open_shell()
