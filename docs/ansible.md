@@ -28,6 +28,10 @@ The default inventory is ``/etc/ansible/hosts`` but you can pass another with th
 can store alias, variable, etc. There are also a lot of
 [variables](http://docs.ansible.com/intro_inventory.html#list-of-behavioral-inventory-parameters) used by ansible itself.
 
+A simple example di inventory is the following
+
+    vagrant ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_ssh_user=root
+
 It's possible also to launch ansible without playbook if you want to execute a single module, like the following
 
     $ ansible -i <inventory> all -m setup --tree /tmp/facts
