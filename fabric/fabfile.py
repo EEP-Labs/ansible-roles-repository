@@ -3,6 +3,7 @@ from fabric.context_managers import show, settings, cd, prefix
 from fabric.contrib import files
 from fabric.operations import run, sudo, get, local, put, open_shell
 from fabric.state import env
+from fabric.api import task
 
 
 # https://gist.github.com/lost-theory/1831706
@@ -33,8 +34,9 @@ def get_release_filename():
 def get_release_filepath():
     return 'releases/%s' % get_release_filename()
 
-def dump_db(db_name):
-    remote_tmp_file_path = '/tmp/dump_db.sql'
+@task
+def dump_db_snapshot(db_name):
+    remote_tmp_file_path = '/tmp/dump_db.sql' # FIXME: use temporary file
     sudo('pg_dump %s > %s' % (db_name, remote_tmp_file_path), user='postgres')
     get(remote_path=remote_tmp_file_path, local_path= get_dump_filepath())
 
@@ -44,8 +46,9 @@ def reset_db():
 def load_db():
     local('cat %s | python manage.py dbshell' % get_dump_filepath())
 
-def load_db_snapshot():
-    dump_db()
+@task
+def load_db_snapshot(db_name):
+    dump_db_snapshot(db_name)
     reset_db()
     load_db()
 
@@ -70,6 +73,7 @@ def virtualenv(virtualenv_path, *args, **kwargs):
 def django_collectstatic(virtualenv_path):
     erun('source %s/bin/activate && honcho --env ../.env run ./manage.py collectstatic' % virtualenv_path)
 
+@task
 def release(head='HEAD'):
     cwd = erun('pwd').stdout
     create_release_archive(head)
