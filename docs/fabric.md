@@ -22,3 +22,9 @@ In order to test with Vagrant
         --port 2222 \
         -f provisioning/fabric/fabfile.py \
         release
+
+There are available three commands
+
+ - ``release`` that deploy a revision in the remote side
+ - ``dump_db_snapshot`` download a dump of the current remote database
+ - ``load_db_snapshot`` download and load into the local database the remote one
