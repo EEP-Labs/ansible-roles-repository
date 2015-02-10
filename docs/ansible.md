@@ -75,3 +75,9 @@ In order to provision with it
     }
   end
 ```
+
+Weirdness
+---------
+
+The commands executed server side sometimes do not use environment variables like ``LC_*`` so for example
+to set correctly the database encoding it's tricky
