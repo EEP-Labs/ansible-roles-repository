@@ -73,6 +73,9 @@ def virtualenv(virtualenv_path, *args, **kwargs):
 def django_collectstatic(virtualenv_path):
     erun('source %s/bin/activate && honcho --env ../.env run ./manage.py collectstatic --noinput' % virtualenv_path)
 
+def django_migrate(virtualenv_path):
+    erun('source %s/bin/activate && honcho --env ../.env run ./manage.py migrate' % virtualenv_path)
+
 @task
 def release(head='HEAD'):
     cwd = erun('pwd').stdout
@@ -94,6 +97,7 @@ def release(head='HEAD'):
         sync_virtualenv(virtualenv_path, '%s/requirements/staging.txt' % app_dir)# parametrize
         with cd(app_dir):
             django_collectstatic(virtualenv_path)
+            django_migrate(virtualenv_path)
     except CommandFailed as e:
         print 'An error occoured: %s' % e
         print '''
