@@ -71,7 +71,7 @@ def virtualenv(virtualenv_path, *args, **kwargs):
     prefix('source %s/bin/activate' % virtualenv_path)
 
 def django_collectstatic(virtualenv_path):
-    erun('source %s/bin/activate && honcho --env ../.env run ./manage.py collectstatic' % virtualenv_path)
+    erun('source %s/bin/activate && honcho --env ../.env run ./manage.py collectstatic --noinput' % virtualenv_path)
 
 @task
 def release(head='HEAD'):
