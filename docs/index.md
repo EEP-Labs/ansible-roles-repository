@@ -1,9 +1,13 @@
 It's important to maintain a set of reusable tools and conventions to deploy web application and stuff, like
 directory structure, database permissions, user home directory and web server configuration.
 
-Exist a lot of tools to do that, we have chosen [Ansible](http://ansible.com) since it's written in Python
+The procedures are categorized as follow
+
+ - Server configuration: exist a lot of tools to do that, we have chosen [Ansible](http://ansible.com) since it's written in Python
 and does not require to install nothing server side but Python itself. There are some drawbacks in this tool
 but up to now has done its job. If you want a little introduction there is a page [here](ansible.md)
+
+- Deploy procedure: we have chosen [Fabric](fabric.md) 
 
 Convention
 ----------
@@ -49,6 +53,7 @@ Directories structure
 The structure is
 
     app  <--- this here will be recreated each time
+    logs
     media
     static
     repo <--- optional
