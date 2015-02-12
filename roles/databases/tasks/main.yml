@@ -34,4 +34,12 @@
       password="{{ db_password }}"
       role_attr_flags={% if development is not defined %}NO{% endif %}CREATEDB,NOSUPERUSER
 
+- name: grant privileges to user [DEVELOPMENT ENABLED]
+  su: yes
+  su_user: postgres
+  postgresql_db:
+    name="{{ db_name }}"
+    owner="{{ db_user }}"
+  when: development is defined
+
 - service: name=postgresql state=restarted
