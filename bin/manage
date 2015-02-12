@@ -58,4 +58,8 @@ case "$1" in
      provision)
         shift
         provision $@
+        ;;
+     *)
+        die "command "$1" does not exist"
+        ;;
 esac
