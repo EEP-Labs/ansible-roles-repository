@@ -1,0 +1,36 @@
+# source script to inizialize environment for local development
+# must be launched from the root of the project containing this as provisioning
+# where should be present a Vagrantfile, a .virtualenv and a .env directories.
+
+source .virtualenv/bin/activate
+
+source .env
+
+export SSH_CTRL_FILE=.ssh_ctrl
+export SSH_HOST=root@127.0.0.1
+
+activate_port_forwarding() {
+    # http://notepad2.blogspot.it/2012/11/run-ssh-tunnel-in-background.html
+    ssh -i ~/.vagrant.d/insecure_private_key \
+        ${SSH_HOST} -p 2222 \
+        -L 6379:127.0.0.1:6379 \
+        -L 5432:127.0.0.1:5432 \
+        -f -N -M -S ${SSH_CTRL_FILE} &
+    echo ' [+] port forwarding activated'
+}
+
+deactivate_port_forwarding() {
+    ssh -S ${SSH_CTRL_FILE} -O exit ${SSH_HOST}
+    echo ' [+] port forwarding deactivated'
+}
+
+vagrant status | grep 'The VM is running' >/dev/null || {
+    echo 'Vagrant is not up, in order to prepare the local development environment launch it'
+    vagrant up
+    activate_port_forwarding
+}
+
+# export function in order to be visible to deactivate script
+export -f activate_port_forwarding
+export -f deactivate_port_forwarding
+export -f deactivate
