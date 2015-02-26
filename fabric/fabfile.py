@@ -5,6 +5,8 @@ from fabric.operations import run, sudo, get, local, put, open_shell
 from fabric.state import env
 from fabric.api import task
 
+REMOTE_REVISION = None
+
 
 # https://gist.github.com/lost-theory/1831706
 class CommandFailed(Exception):
@@ -19,6 +21,14 @@ def erun(*args, **kwargs):
         raise CommandFailed("args: %r, kwargs: %r, error code: %r" % (args, kwargs, result.return_code), result)
     return result
 
+def esudo(*args, **kwargs):
+    with settings(warn_only=True):
+        result = sudo(*args, **kwargs)
+    if result.failed:
+        raise CommandFailed("args: %r, kwargs: %r, error code: %r" % (args, kwargs, result.return_code), result)
+    return result
+
+
 # http://docs.fabfile.org/en/latest/usage/execution.html#roles
 
 def describe_revision(head='HEAD'):
@@ -26,7 +36,7 @@ def describe_revision(head='HEAD'):
     return actual_tag
 
 def get_dump_filepath():
-    return 'backups/staging-%s.sql' % describe_revision()
+    return 'backups/staging-%s.sql' % get_remote_revision()
 
 def get_release_filename():
     return '%s.tar.gz' % describe_revision()
@@ -117,3 +127,13 @@ def release(head='HEAD', web_root=None):
         app_dir,
         virtualenv_path,
     ))
+
+def get_remote_revision():
+    global REMOTE_REVISION
+
+    if not REMOTE_REVISION:
+        current_app_dir = esudo('cd && basename $(readlink -f app)', user='benaco')
+        _, REMOTE_REVISION = current_app_dir.split('-')
+
+    return REMOTE_REVISION
+
