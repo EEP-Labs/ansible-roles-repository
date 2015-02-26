@@ -116,6 +116,9 @@ def release(head='HEAD', web_root=None):
         with cd(app_dir):
             django_collectstatic(virtualenv_path)
             django_migrate(virtualenv_path)
+
+        erun('unlink app || true') # this fails if the first time
+        erun('ln -s %s app' % app_dir)
     except CommandFailed as e:
         print 'An error occoured: %s' % e
         print '''

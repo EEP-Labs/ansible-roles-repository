@@ -52,7 +52,8 @@ Directories structure
 
 The structure is
 
-    app  <--- this here will be recreated each time
+    app-rev  <--- this here will be recreated each time
+    app      <--- this is a symbolic link to the actual app's directory
     logs
     media
     static
