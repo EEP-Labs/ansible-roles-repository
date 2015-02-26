@@ -35,8 +35,8 @@ def describe_revision(head='HEAD'):
     actual_tag = local('git describe --always --tags %s' % head, capture=True)
     return actual_tag
 
-def get_dump_filepath():
-    return 'backups/staging-%s.sql' % get_remote_revision()
+def get_dump_filepath(user):
+    return 'backups/staging-%s.sql' % get_remote_revision(user)
 
 def get_release_filename():
     return '%s.tar.gz' % describe_revision()
@@ -45,22 +45,23 @@ def get_release_filepath():
     return 'releases/%s' % get_release_filename()
 
 @task
-def dump_db_snapshot(db_name):
+def dump_db_snapshot(db_name, user):
     remote_tmp_file_path = '/tmp/dump_db.sql' # FIXME: use temporary file
     sudo('pg_dump %s > %s' % (db_name, remote_tmp_file_path), user='postgres')
-    get(remote_path=remote_tmp_file_path, local_path= get_dump_filepath())
+    get(remote_path=remote_tmp_file_path, local_path= get_dump_filepath(user))
 
 def reset_db():
     local('python manage.py reset_db')
 
-def load_db():
-    local('cat %s | python manage.py dbshell' % get_dump_filepath())
+@task
+def load_db(user):
+    local('cat %s | python manage.py dbshell' % get_dump_filepath(user))
 
 @task
-def load_db_snapshot(db_name):
-    dump_db_snapshot(db_name)
+def load_db_snapshot(db_name, username):
+    dump_db_snapshot(db_name, username)
     reset_db()
-    load_db()
+    load_db(username)
 
 def create_release_archive(head='HEAD'):
     local('git archive --worktree-attributes --format=tar.gz %s > %s' % (
@@ -131,11 +132,11 @@ def release(head='HEAD', web_root=None):
         virtualenv_path,
     ))
 
-def get_remote_revision():
+def get_remote_revision(user):
     global REMOTE_REVISION
 
     if not REMOTE_REVISION:
-        current_app_dir = esudo('cd && basename $(readlink -f app)', user='benaco')
+        current_app_dir = esudo('cd && basename $(readlink -f app)', user=user)
         _, REMOTE_REVISION = current_app_dir.split('-')
 
     return REMOTE_REVISION

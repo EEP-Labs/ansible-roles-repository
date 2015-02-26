@@ -28,3 +28,10 @@ There are available three commands
  - ``release`` that deploy a revision in the remote side
  - ``dump_db_snapshot`` download a dump of the current remote database
  - ``load_db_snapshot`` download and load into the local database the remote one
+ 
+    $ fab -f provisioning/fabric/fabfile.py \
+        --no_agent \
+        -H mydomain \
+        -i provisioning/id_rsa \
+        --user root \
+        load_db_snapshot:deploydb,deployuser
