@@ -43,11 +43,15 @@ provision() {
     local INVENTORY=ansible_${CONFIGURATION}_inventory
     local VARIABLES=ansible_${CONFIGURATION}_variables
 
+    # allow to pass argument to ansible-playbook
+    shift
+
     check_file_exists ${INVENTORY}
     check_file_exists ${VARIABLES}
 
     ansible-playbook --inventory-file ${INVENTORY} \
         --extra-vars @${VARIABLES} \
+        $@ \
         playbook.yml
 }
 case "$1" in
