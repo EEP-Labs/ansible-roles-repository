@@ -1,4 +1,6 @@
 #!/bin/bash
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -eo pipefail
 
@@ -48,6 +50,8 @@ provision() {
 
     check_file_exists ${INVENTORY}
     check_file_exists ${VARIABLES}
+
+    export ROLES_PATH="${THIS_DIR}"
 
     ansible-playbook --inventory-file ${INVENTORY} \
         --extra-vars @${VARIABLES} \
