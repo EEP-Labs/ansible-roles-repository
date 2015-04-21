@@ -63,6 +63,7 @@ def load_db_snapshot(db_name, username):
     reset_db()
     load_db(username)
 
+@task
 def create_release_archive(head='HEAD'):
     local('git archive --worktree-attributes --format=tar.gz %s > %s' % (
         head,
