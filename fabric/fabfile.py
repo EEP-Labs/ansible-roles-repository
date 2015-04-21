@@ -137,7 +137,11 @@ def get_remote_revision(user):
 
     if not REMOTE_REVISION:
         current_app_dir = esudo('cd && basename $(readlink -f app)', user=user)
-        _, REMOTE_REVISION = current_app_dir.split('-')
+        try:
+            _, REMOTE_REVISION = current_app_dir.split('-')
+        except Exception as e:
+            print e
+            REMOTE_REVISION = 'unknown'
 
     return REMOTE_REVISION
 
