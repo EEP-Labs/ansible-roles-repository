@@ -35,8 +35,8 @@ def describe_revision(head='HEAD'):
     actual_tag = local('git describe --always --tags %s' % head, capture=True)
     return actual_tag
 
-def get_dump_filepath(user):
-    return 'backups/staging-%s.sql' % get_remote_revision(user)
+def get_dump_filepath(user, prefix=u'backups'):
+    return '%s/%s.sql' % (prefix, get_remote_revision(user))
 
 def get_release_filename():
     return '%s.tar.gz' % describe_revision()
