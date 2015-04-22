@@ -142,9 +142,11 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
 '''
     print '''
 
-    Use honcho --env ../.env start inside a screen session
+    %s --> %s
 
-    '''
+        Use 'honcho --env ../.env start' inside a screen session
+
+    ''' % (previous_version, actual_version)
     open_shell('cd %s && source %s/bin/activate' % (
         app_dir,
         virtualenv_path,
