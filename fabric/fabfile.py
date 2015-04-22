@@ -128,6 +128,11 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
 #        fallback to shell         #
 ####################################
 '''
+    print '''
+
+    Use honcho --env ../.env start inside a screen session
+
+    '''
     open_shell('cd %s && source %s/bin/activate' % (
         app_dir,
         virtualenv_path,
