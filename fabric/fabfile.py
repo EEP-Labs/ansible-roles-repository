@@ -89,7 +89,7 @@ def django_migrate(virtualenv_path):
     erun('source %s/bin/activate && honcho --env ../.env run ./manage.py migrate' % virtualenv_path)
 
 @task
-def release(head='HEAD', web_root=None):
+def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
     # locally we create the archive with the app code
     create_release_archive(head)
     release_filename = get_release_filename()
@@ -114,7 +114,7 @@ def release(head='HEAD', web_root=None):
             release_filename,
             app_dir,
         ))
-        sync_virtualenv(virtualenv_path, '%s/requirements/staging.txt' % app_dir)# parametrize
+        sync_virtualenv(virtualenv_path, '%s/%s' % (app_dir, requirements,))# parametrize
         with cd(app_dir):
             django_collectstatic(virtualenv_path)
             django_migrate(virtualenv_path)
