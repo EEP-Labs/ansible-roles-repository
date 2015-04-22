@@ -1,3 +1,4 @@
+from fabric.contrib.files import is_link
 import os
 from fabric.context_managers import show, settings, cd, prefix
 from fabric.contrib import files
@@ -93,6 +94,10 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
     # locally we create the archive with the app code
     create_release_archive(head)
     release_filename = get_release_filename()
+
+    actual_version = describe_revision(head)
+    previous_version = None
+
     # and upload it to the server
     if not files.exists(release_filename):
         put(local_path=get_release_filepath())
@@ -119,8 +124,15 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
             django_collectstatic(virtualenv_path)
             django_migrate(virtualenv_path)
 
-        erun('unlink app || true') # this fails if the first time
-        erun('ln -s %s app' % app_dir)
+        # find the previous release
+        if is_link('app'):
+            # TODO: move old deploy in an 'archive' directory
+            previous_deploy_path = erun('basename $(readlink -f app)').stdout
+            idx = previous_deploy_path.index('-')
+            previous_version = previous_deploy_path[idx + 1:]
+
+            erun('unlink app')
+            erun('ln -s %s app' % app_dir)
     except CommandFailed as e:
         print 'An error occoured: %s' % e
         print '''
