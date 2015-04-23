@@ -132,7 +132,9 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
             previous_version = previous_deploy_path[idx + 1:]
 
             erun('unlink app')
-            erun('ln -s %s app' % app_dir)
+
+        erun('ln -s %s app' % app_dir)
+
     except CommandFailed as e:
         print 'An error occoured: %s' % e
         print '''
