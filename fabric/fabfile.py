@@ -124,7 +124,7 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
             django_collectstatic(virtualenv_path)
             django_migrate(virtualenv_path)
 
-        # find the previous release
+        # find the previous release and move/unlink it
         if is_link('app'):
             # TODO: move old deploy in an 'archive' directory
             previous_deploy_path = erun('basename $(readlink -f app)').stdout
@@ -132,6 +132,7 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
             previous_version = previous_deploy_path[idx + 1:]
 
             erun('unlink app')
+            erun('mkdir -p old && mv %s old/' % previous_deploy_path)
 
         erun('ln -s %s app' % app_dir)
 

@@ -57,7 +57,8 @@ The structure is
     logs
     media
     static
-    repo <--- optional
+    repo     <--- optional
+    old/     <---- previous releases 
     .conf
     .virtualenv
 
