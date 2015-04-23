@@ -33,7 +33,7 @@ def esudo(*args, **kwargs):
 # http://docs.fabfile.org/en/latest/usage/execution.html#roles
 
 def describe_revision(head='HEAD'):
-    actual_tag = local('git describe --always --tags %s' % head, capture=True)
+    actual_tag = local('git describe --always %s' % head, capture=True)
     return actual_tag
 
 def get_dump_filepath(user, prefix=u'backups'):
