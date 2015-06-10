@@ -3,11 +3,48 @@
 readonly PROGNAME=$(basename "$0")
 readonly PROGDIR=$(readlink -m $(dirname $0))
 
-pushd "${PROGDIR}"/..
+INVENTORY_FILE="ansible_vagrant_inventory"
+VARIABLES_FILE="ansible_vagrant_variables"
+PLAYBOOK="playbook.yml"
 
-readonly PLAYBOOK=${1:-playbook.yml}
+pushd "${PROGDIR}"/.. >/dev/null
 
-ansible-playbook                                     \
-        --inventory-file=ansible_vagrant_inventory   \
-        --extra-vars @ansible_vagrant_variables      \
+
+usage() {
+    cat <<- EOF
+usage: $0 [-i <inventory>] [-v <variables>] [-h]
+EOF
+}
+
+cmdline() {
+    while getopts "hv:i:" OPTION
+    do
+         case $OPTION in
+         v)
+            VARIABLES_FILE=$OPTARG
+             ;;
+         h)
+             usage
+             exit 0
+             ;;
+         i)
+            INVENTORY_FILE=$OPTARG
+            ;;
+         \?)
+            echo "Unknown option: -$OPTARG" >&2
+            exit 1
+            ;;
+         :) echo "Missing option argument for -$OPTARG" >&2; exit 1
+            ;;
+        esac
+    done
+
+    return 0
+}
+
+cmdline "$@"
+
+ansible-playbook                               \
+        --inventory-file="${INVENTORY_FILE}"   \
+        --extra-vars @"${VARIABLES_FILE}"      \
         "${PLAYBOOK}"
