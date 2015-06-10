@@ -1,0 +1,13 @@
+#!/bin/bash
+
+readonly PROGNAME=$(basename "$0")
+readonly PROGDIR=$(readlink -m $(dirname $0))
+
+pushd "${PROGDIR}"/..
+
+readonly PLAYBOOK=${1:-playbook.yml}
+
+ansible-playbook                                     \
+        --inventory-file=ansible_vagrant_inventory   \
+        --extra-vars @ansible_vagrant_variables      \
+        "${PLAYBOOK}"
