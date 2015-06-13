@@ -1,4 +1,5 @@
 from fabric.contrib.files import is_link
+from fabric.utils import abort
 import os
 from fabric.context_managers import show, settings, cd, prefix
 from fabric.contrib import files
