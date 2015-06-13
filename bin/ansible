@@ -10,14 +10,17 @@ PLAYBOOK="playbook.yml"
 
 usage() {
     cat <<- EOF
-usage: $0 [-i <inventory>] [-v <variables>] [-h]
+usage: $0 [-i <inventory>] [-v <variables>] [-h] [-t]
 EOF
 }
 
 cmdline() {
-    while getopts "hv:i:" OPTION
+    while getopts "htv:i:" OPTION
     do
          case $OPTION in
+         t)
+            set -x
+            ;;
          v)
             VARIABLES_FILE=$OPTARG
              ;;
