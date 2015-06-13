@@ -7,8 +7,6 @@ INVENTORY_FILE="ansible_vagrant_inventory"
 VARIABLES_FILE="ansible_vagrant_variables"
 PLAYBOOK="playbook.yml"
 
-pushd "${PROGDIR}"/.. >/dev/null
-
 
 usage() {
     cat <<- EOF
