@@ -91,6 +91,8 @@ def django_migrate(virtualenv_path):
 
 @task
 def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
+    if not os.path.isfile(requirements):
+        raise ValueError('%s does not exist' % requirements)
     # locally we create the archive with the app code
     create_release_archive(head)
     release_filename = get_release_filename()
