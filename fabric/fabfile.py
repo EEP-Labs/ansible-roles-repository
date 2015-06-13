@@ -118,11 +118,17 @@ def validate_steps(steps):
 # TODO: factorize also steps related to python steps (e.g. virtualenv)
 #       probably with pre-steps and post-steps
 @task
-def release(head='HEAD', web_root=None, requirements=u'requirements.txt', steps=None):
+def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpath='.env', steps=None):
     if not os.path.isfile(requirements):
         raise ValueError('%s does not exist' % requirements)
 
     steps = validate_steps(steps) if steps else []
+
+    cwd = erun('pwd').stdout if not web_root else web_root
+
+    if not files.exists(os.path.abspath(os.path.join(cwd, envpath))):
+        raise abort('%s doesn\'t exist, create it before release using configure_env task!!!' % envpath)
+
     # locally we create the archive with the app code
     create_release_archive(head)
     release_filename = get_release_filename()
@@ -134,7 +140,6 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', steps=
     if not files.exists(release_filename):
         put(local_path=get_release_filepath())
 
-    cwd = erun('pwd').stdout if not web_root else web_root
 
     app_dir = os.path.abspath(os.path.join(cwd, 'app-%s' % describe_revision(head)))
     virtualenv_path = os.path.abspath(os.path.join(cwd, '.virtualenv'))
