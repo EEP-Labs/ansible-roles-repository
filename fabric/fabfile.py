@@ -42,6 +42,7 @@ def get_dump_filepath(user, prefix=u'backups'):
 def get_release_filename():
     return '%s.tar.gz' % describe_revision()
 
+# TODO: create directory?
 def get_release_filepath():
     return 'releases/%s' % get_release_filename()
 
@@ -89,10 +90,38 @@ def django_collectstatic(virtualenv_path):
 def django_migrate(virtualenv_path):
     erun('source %s/bin/activate && honcho --env ../.env run ./manage.py migrate' % virtualenv_path)
 
+def validate_steps(steps):
+    '''
+    >>> func1 = lambda x:x
+    >>> steps = [func1, 'datetime.datetime']
+    >>> validate_steps(steps)
+    [func1, 'auaua']
+    '''
+    func_steps = []
+    for step in steps:
+        func_step = step
+        # if is a string then import it
+        if not callable(step) and isinstance(step, basestring):
+            last_dot = step.rindex('.')
+            module, func_name = step[:last_dot], step[last_dot + 1:]
+            func_step = getattr(__import__(module), func_name)
+
+        if not callable(func_step):
+            raise ValueError('You must pass a function')
+
+        func_steps.append(func_step)
+
+    return func_steps
+
+
+# TODO: factorize also steps related to python steps (e.g. virtualenv)
+#       probably with pre-steps and post-steps
 @task
-def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
+def release(head='HEAD', web_root=None, requirements=u'requirements.txt', steps=None):
     if not os.path.isfile(requirements):
         raise ValueError('%s does not exist' % requirements)
+
+    steps = validate_steps(steps) if steps else []
     # locally we create the archive with the app code
     create_release_archive(head)
     release_filename = get_release_filename()
@@ -123,8 +152,8 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
         ))
         sync_virtualenv(virtualenv_path, '%s/%s' % (app_dir, requirements,))# parametrize
         with cd(app_dir):
-            django_collectstatic(virtualenv_path)
-            django_migrate(virtualenv_path)
+            for step in steps:
+                step(virtualenv_path)
 
         # find the previous release and move/unlink it
         if is_link('app'):
@@ -156,6 +185,10 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt'):
         app_dir,
         virtualenv_path,
     ))
+
+@task
+def release_django(head='HEAD', web_root=None, requirements=u'requirements.txt'):
+    release(head, web_root, requirements, steps=[django_collectstatic, django_migrate])
 
 def get_remote_revision(user):
     global REMOTE_REVISION
