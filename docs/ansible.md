@@ -14,6 +14,8 @@ or from the package manager
 
     # apt-get install ansible
 
+Our advice is to use source.
+
 Usage
 -----
 
