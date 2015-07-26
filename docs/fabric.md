@@ -3,6 +3,16 @@ Fabric
 
 [Doc](http://docs.fabfile.org/)
 
+The ``fabfile`` used defines some tasks
+
+ - configure_env
+ - create_release_archive
+ - dump_db_snapshot
+ - load_db
+ - load_db_snapshot
+ - release
+
+
 Fabric uses internally a re-implementation of the [SSH with ``paramiko``](http://docs.fabfile.org/en/latest/usage/ssh.html)
 so be aware of some behaviours not expected.
 
@@ -23,12 +33,7 @@ In order to test with Vagrant
         -f provisioning/fabric/fabfile.py \
         release
 
-There are available three commands
 
- - ``release`` that deploy a revision in the remote side
- - ``dump_db_snapshot`` download a dump of the current remote database
- - ``load_db_snapshot`` download and load into the local database the remote one
- 
     $ fab -f provisioning/fabric/fabfile.py \
         --no_agent \
         -H mydomain \

@@ -1,3 +1,5 @@
+import shlex
+import subprocess
 from fabric.contrib.files import is_link
 from fabric.utils import abort
 import os
@@ -209,3 +211,21 @@ def get_remote_revision(user):
 
     return REMOTE_REVISION
 
+@task
+def configure_env(envpath='.env', local_copy_path='.remote.env', web_root=None):
+    cwd = erun('pwd').stdout if not web_root else web_root
+
+    envpath = os.path.abspath(os.path.join(cwd, envpath))
+    # first of all, get the file remote side
+    if files.exists(envpath):
+        get(remote_path=envpath, local_path=local_copy_path)
+
+    # just in case the remote file doesn't exist
+    with open(local_copy_path, 'a+') as f:
+        pass
+
+    subprocess.call(shlex.split("vim %s" % local_copy_path))
+
+    put(local_path=local_copy_path, remote_path=envpath)
+
+    os.remove(local_copy_path)
