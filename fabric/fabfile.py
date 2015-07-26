@@ -146,10 +146,10 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
 
     try:
         # if exists remove dir
-        erun('( test -d %s && rm -vfr %s ) || true' % (
-            app_dir,
-            app_dir,
-        ))
+        if files.exists(app_dir):
+            erun('rm -vfr %s' % (
+                app_dir,
+            ))
         # create the remote dir
         erun('mkdir -p %s' % app_dir)
         erun('tar xf %s -C %s' % (
