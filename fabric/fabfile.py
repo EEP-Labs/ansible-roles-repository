@@ -116,7 +116,6 @@ def validate_steps(steps):
 
     return func_steps
 
-
 # TODO: factorize also steps related to python steps (e.g. virtualenv)
 #       probably with pre-steps and post-steps
 @task
@@ -171,8 +170,9 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
             idx = previous_deploy_path.index('-')
             previous_version = previous_deploy_path[idx + 1:]
 
-            erun('unlink app')
-            erun('mkdir -p old && mv %s old/' % previous_deploy_path)
+            if previous_version != actual_version:
+                erun('unlink app')
+                erun('mkdir -p old && mv -f %s old/' % previous_deploy_path)
 
         erun('ln -s %s app' % app_dir)
 
