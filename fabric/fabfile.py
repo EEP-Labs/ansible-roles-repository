@@ -128,8 +128,9 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
 
     cwd = erun('pwd').stdout if not web_root else web_root
 
-    if not files.exists(os.path.abspath(os.path.join(cwd, envpath))):
-        raise abort('%s doesn\'t exist, create it before release using configure_env task!!!' % envpath)
+    abs_envpath = os.path.abspath(os.path.join(cwd, envpath))
+    if not files.exists(abs_envpath):
+        raise abort('%s doesn\'t exist, create it before release using configure_env task!!!' % abs_envpath)
 
     # locally we create the archive with the app code
     create_release_archive(head)
