@@ -196,8 +196,8 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
     ))
 
 @task
-def release_django(head='HEAD', web_root=None, requirements=u'requirements.txt'):
-    release(head, web_root, requirements, steps=[django_collectstatic, django_migrate])
+def release_django(head='HEAD', web_root=None, requirements=u'requirements.txt', envpath='.env'):
+    release(head, web_root, requirements, steps=[django_collectstatic, django_migrate], envpath=envpath)
 
 def get_remote_revision(user):
     global REMOTE_REVISION
