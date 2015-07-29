@@ -43,6 +43,7 @@ Usage
 
 In the ``bin/`` directory exists the ``manage`` script that help to configure the machines
  
+    (main project dir) $ bin/ansible
     (provisioning dir) $ bin/manage provision <configuration>
     (main project dir) $ git remote add vagrant example:repo/
     (main project dir) $ provision/bin/deploy vagrant HEAD
