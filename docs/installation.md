@@ -10,6 +10,6 @@ with the following command
 
 After that you can copy the ``vagrant`` and ansible configuration files
 
-    $ cp provision/{Vagrantfile,ansible_vagrant_inventory,ansible_vagrant_variables} .
+    $ cp provision/{playbook.yml,ansible.cfg,Vagrantfile,ansible_vagrant_inventory,ansible_vagrant_variables} .
 
 and edit them to fit your taste.
