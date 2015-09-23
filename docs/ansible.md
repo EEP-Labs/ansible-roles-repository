@@ -60,6 +60,15 @@ Roles
 
 Since we want to reuse configuration across projects (that is the aim of this project) we are using the **roles**.
 
+The roles available are
+
+ - common: configure locale and install extra packages needed
+ - database: install and configure postgres, create an user and a database
+ - nginx: install and configure an available site
+ - repo: create a bare repository
+ - webapp: create an UNIX user and allow access by SSH key
+ - workers: install redis
+
 Vagrant
 -------
 
