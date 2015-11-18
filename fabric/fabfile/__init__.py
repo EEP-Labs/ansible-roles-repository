@@ -10,6 +10,7 @@ from fabric.state import env
 from fabric.api import task
 
 REMOTE_REVISION = None
+RELEASES_DIR = 'releases'
 
 
 # https://gist.github.com/lost-theory/1831706
@@ -45,9 +46,8 @@ def get_dump_filepath(user, prefix=u'backups'):
 def get_release_filename():
     return '%s.tar.gz' % describe_revision()
 
-# TODO: create directory?
 def get_release_filepath():
-    return 'releases/%s' % get_release_filename()
+    return os.path.join(RELEASES_DIR, get_release_filename())
 
 @task
 def dump_db_snapshot(db_name, user):
@@ -70,6 +70,7 @@ def load_db_snapshot(db_name, username):
 
 @task
 def create_release_archive(head='HEAD'):
+    local('mkdir -p %s' % RELEASES_DIR)
     local('git archive --worktree-attributes --format=tar.gz %s > %s' % (
         head,
         get_release_filepath()
