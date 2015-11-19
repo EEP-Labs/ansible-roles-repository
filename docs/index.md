@@ -7,7 +7,7 @@ The procedures are categorized as follow
 and does not require to install nothing server side but Python itself. There are some drawbacks in this tool
 but up to now has done its job. If you want a little introduction there is a page [here](ansible.md)
 
-- Deploy procedure: we have chosen [Fabric](fabric.md) 
+ - Deploy procedure: we have chosen [Fabric](fabric.md) 
 
 Convention
 ----------
