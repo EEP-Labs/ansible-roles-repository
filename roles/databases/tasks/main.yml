@@ -1,7 +1,7 @@
 ---
 - name: check mandatory parameters
-  fail: msg="db_user, db_name and db_password parameters are not defined"
-  when: db_user is not defined or db_name is not defined or db_password is not defined
+  fail: msg="db_user, db_name, db_password and db_version parameters are not defined"
+  when: db_user is not defined or db_name is not defined or db_password is not defined or db_version is not defined
 
 # here we need to pass the LANG env variable otherwise the template0 will be created with
 #  another locale
@@ -9,8 +9,8 @@
   apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
   with_items:
     - libpq-dev
+    - postgresql-{{ db_version }}
     - python-psycopg2
-    - postgresql-9.1
   environment:
     LANG: 'it_IT.UTF-8'
 
