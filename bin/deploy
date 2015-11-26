@@ -1,7 +1,13 @@
-#!/bin/bash -x
+#!/bin/bash
 
-# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export GIT_SSH=$(readlink -f ${DIR}'/../bin/connect')
-exec git push $@
-#GIT_SSH=miao echo $GIT_SSH
+# wrap fabric
+# create symbolic link with a name describing type of release
+
+readonly PROGNAME=$(basename "$0")
+readonly PROGDIR=$(readlink -m $(dirname $0))
+
+COMMAND=""
+
+[ "$PROGNAME" != "deploy" ] && COMMAND="${PROGNAME}"
+# '-a' to avoid quering ssh agent: https://stackoverflow.com/questions/5246416/python-fabric-gives-fatal-error-no-existing-session
+fab -a -f "${PROGDIR}/../fabric/fabfile" "$@"
