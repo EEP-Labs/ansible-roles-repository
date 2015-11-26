@@ -12,6 +12,7 @@ from fabric.api import task
 REMOTE_REVISION = None
 RELEASES_DIR = 'releases'
 
+env.use_ssh_config = True
 
 # https://gist.github.com/lost-theory/1831706
 class CommandFailed(Exception):
