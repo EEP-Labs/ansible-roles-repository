@@ -1,3 +1,4 @@
+import hashlib
 import shlex
 import subprocess
 from fabric.contrib.files import is_link
@@ -118,6 +119,86 @@ def validate_steps(steps):
 
     return func_steps
 
+# https://stackoverflow.com/questions/3431825/generating-a-md5-checksum-of-a-file
+def hashfile(afile, hasher, blocksize=65536):
+    with open(afile, 'r') as f:
+        buf = f.read(blocksize)
+        while len(buf) > 0:
+            hasher.update(buf)
+            buf = f.read(blocksize)
+
+    return hasher.hexdigest()
+
+@task
+def _release(archive, revision=None, web_root=None, **kwargs):
+    '''
+    Main task
+
+    its role is to decompress an archive to the web root into a directory
+    named 'app-X' where X identifies the revision; by default the revision
+    is calculated from the sha256 of the archive when not indicated.
+
+    :param version:
+    :param archive:
+    :param web_root:
+    :param kwargs:
+    :return:
+    '''
+    previous_revision = None
+
+    cwd = erun('pwd').stdout if not web_root else web_root
+
+    if not os.path.exists(archive):
+        raise CommandFailed('Archive \'%s\' doesn\'t exist' % archive)
+
+    revision = revision or hashfile(archive, hashlib.sha256())
+    remote_filepath = '%s-%s' % (archive, revision)
+
+    app_dir = os.path.join(cwd, 'app-%s' % revision)
+    app_symlink = os.path.join(cwd, 'app')
+
+    put(local_path=archive, remote_path=remote_filepath)
+
+    try:
+        # if exists remove dir
+        if files.exists(app_dir):
+            erun('rm -vfr %s' % (
+                app_dir,
+            ))
+        # create the remote dir
+        erun('mkdir -p %s' % app_dir)
+        erun('tar xf %s -C %s' % (
+            remote_filepath,
+            app_dir,
+        ))
+        # find the previous release and move/unlink it
+        if files.exists(app_symlink) and is_link(app_symlink):
+            # TODO: move old deploy in an 'archive' directory
+            previous_deploy_path = erun('basename $(readlink -f %s)' % app_symlink).stdout
+            idx = previous_deploy_path.index('-')
+            previous_revision = previous_deploy_path[idx + 1:]
+
+            if previous_revision != revision:
+                erun('unlink %s' % app_symlink)
+                erun('mkdir -p old && mv -f %s old/' % previous_deploy_path)
+
+        elif files.exists(app_symlink):
+            raise CommandFailed('app directory already exists and is not a symlink')
+
+        erun('ln -s %s %s' % (app_dir, app_symlink))
+
+    except CommandFailed as e:
+        print 'An error occoured: %s' % e
+
+    print '''
+
+    %s --> %s
+
+''' % (previous_revision or '?', revision)
+    open_shell('cd %s' % (
+        app_dir,
+    ))
+
 # TODO: factorize also steps related to python steps (e.g. virtualenv)
 #       probably with pre-steps and post-steps
 @task
@@ -180,11 +261,7 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
 
     except CommandFailed as e:
         print 'An error occoured: %s' % e
-        print '''
-####################################
-#        fallback to shell         #
-####################################
-'''
+
     print '''
 
     %s --> %s
@@ -194,6 +271,17 @@ def release(head='HEAD', web_root=None, requirements=u'requirements.txt', envpat
     ''' % (previous_version, actual_version)
     open_shell('cd %s && source %s/bin/activate' % (
         app_dir,
+        virtualenv_path,
+    ))
+
+@task
+def shell():
+    cwd = erun('pwd').stdout
+
+    virtualenv_path = os.path.abspath(os.path.join(cwd, '.virtualenv'))
+
+    open_shell('cd %s && source %s/bin/activate' % (
+        'app-%s' % describe_revision(),
         virtualenv_path,
     ))
 
