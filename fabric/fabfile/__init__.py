@@ -96,6 +96,9 @@ def django_collectstatic(virtualenv_path):
 def django_migrate(virtualenv_path):
     erun('source %s/bin/activate && honcho --env ../.env run ./manage.py migrate' % virtualenv_path)
 
+def django_createcachetable(virtualenv_path):
+    erun('source %s/bin/activate && honcho --env ../.env run ./manage.py createcachetable -v 3' % virtualenv_path)
+
 def validate_steps(steps):
     '''
     >>> func1 = lambda x:x
@@ -287,7 +290,7 @@ def shell():
 
 @task
 def release_django(head='HEAD', web_root=None, requirements=u'requirements.txt', envpath='.env'):
-    release(head, web_root, requirements, steps=[django_collectstatic, django_migrate], envpath=envpath)
+    release(head, web_root, requirements, steps=[django_migrate, django_createcachetable, django_collectstatic,], envpath=envpath)
 
 def get_remote_revision(user):
     global REMOTE_REVISION
