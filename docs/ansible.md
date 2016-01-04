@@ -7,6 +7,8 @@ Installation
 From source
 
     $ git clone https://github.com/ansible/ansible.git && cd ansible
+    # sudo apt-get install python-paramiko python-yaml python-jinja2 python-httplib2 python-setuptools python-six sshpass
+    # sudo apt-get install cdbs debhelper dpkg-dev git-core reprepro python-support fakeroot asciidoc devscripts docbook-xml xsltproc
     $ make deb
     # dpkg -i ../ansible_XXX.deb
 
